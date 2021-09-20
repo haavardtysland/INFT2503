@@ -1,5 +1,4 @@
 #include <vector>
-#include <algorithm>
 #include <iostream>
 using namespace std;
 
@@ -10,6 +9,8 @@ int main(){
 
     vec.emplace(vec.begin() + 1, 6.6);
 
+    cout << vec.front() << endl;
+
     vector<double>::iterator it = find(vec.begin(), vec.end(), 3.3);
     
     if(it != vec.end()){
@@ -18,6 +19,5 @@ int main(){
         cout << "Verdien ble ikke funnet" << endl;
     }
 
-    cout << vec.front() << endl;
     return 0;
 }
