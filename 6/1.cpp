@@ -97,36 +97,54 @@ public:
 
   /// Move a chess piece if it is a valid move.
   /// Does not test for check or checkmate.
-  bool move_piece(const std::string &from, const std::string &to) {
+  bool move_piece(const std::string &from, const std::string &to){
     int from_x = from[0] - 'a';
     int from_y = stoi(string() + from[1]) - 1;
     int to_x = to[0] - 'a';
     int to_y = stoi(string() + to[1]) - 1;
 
     auto &piece_from = squares[from_x][from_y];
-    if (piece_from) {
-      if (piece_from->valid_move(from_x, from_y, to_x, to_y)) {
-        cout << piece_from->type() << " is moving from " << from << " to " << to << endl;
+    if (piece_from)
+    {
+      if (piece_from->valid_move(from_x, from_y, to_x, to_y))
+      {
+        if (on_piece_move)
+          on_piece_move(*piece_from, from, to);
         auto &piece_to = squares[to_x][to_y];
-        if (piece_to) {
-          if (piece_from->color != piece_to->color) {
-            cout << piece_to->type() << " is being removed from " << to << endl;
+        if (piece_to)
+        {
+          if (piece_from->color != piece_to->color)
+          {
+            if (on_piece_removed)
+              on_piece_removed(*piece_to, to);
             if (auto king = dynamic_cast<King *>(piece_to.get()))
-              cout << king->color_string() << " lost the game" << endl;
-          } else {
+              if (on_lost_game)
+                on_lost_game(king->color);
+          }
+          else
+          {
             // piece in the from square has the same color as the piece in the to square
-            cout << "can not move " << piece_from->type() << " from " << from << " to " << to << endl;
+            if (on_piece_move_invalid)
+              on_piece_move_invalid(*piece_from, from, to);
             return false;
           }
         }
         piece_to = move(piece_from);
+        if (after_piece_move)
+          after_piece_move(*this);
         return true;
-      } else {
-        cout << "can not move " << piece_from->type() << " from " << from << " to " << to << endl;
+      }
+      else
+      {
+        if (on_piece_move_invalid)
+          on_piece_move_invalid(*piece_from, from, to);
         return false;
       }
-    } else {
-      cout << "no piece at " << from << endl;
+    }
+    else
+    {
+      if (on_piece_move_missing)
+        on_piece_move_missing(from);
       return false;
     }
   }
@@ -183,6 +201,7 @@ public:
 
 int main() {
   ChessBoard board;
+  ChessBoardPrint print(board);
 
   board.squares[4][0] = make_unique<ChessBoard::King>(ChessBoard::Color::WHITE);
   board.squares[1][0] = make_unique<ChessBoard::Knight>(ChessBoard::Color::WHITE);
@@ -200,21 +219,12 @@ int main() {
 
   cout << "A simulated game:" << endl;
   board.move_piece("e1", "e2");
-  cout << board << endl;
   board.move_piece("g8", "h6");
-  cout << board << endl;
   board.move_piece("b1", "c3");
-  cout << board << endl;
   board.move_piece("h6", "g8");
-  cout << board << endl;
   board.move_piece("c3", "d5");
-  cout << board << endl;
   board.move_piece("g8", "h6");
-  cout << board << endl;
   board.move_piece("d5", "f6");
-  cout << board << endl;
   board.move_piece("h6", "g8");
-  cout << board << endl;
   board.move_piece("f6", "e8");
-  cout << board << endl;
 }
