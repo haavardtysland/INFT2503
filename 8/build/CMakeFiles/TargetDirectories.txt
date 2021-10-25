@@ -1,4 +1,0 @@
-/Users/havardtysland/Documents/Dataing 5.  semester/C++/8/build/CMakeFiles/rebuild_cache.dir
-/Users/havardtysland/Documents/Dataing 5.  semester/C++/8/build/CMakeFiles/edit_cache.dir
-/Users/havardtysland/Documents/Dataing 5.  semester/C++/8/build/CMakeFiles/2.dir
-/Users/havardtysland/Documents/Dataing 5.  semester/C++/8/build/CMakeFiles/1.dir
